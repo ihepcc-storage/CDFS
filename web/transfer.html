@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cross-Domain File System</title>
+<style>
+	.homelink{
+		text-decoration: none;
+		color: #000;
+	}
+	.form{
+		width: 100%;
+		height: auto;
+		text-align: center;
+	}
+</style>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+</script>
+</head>
+<body>
+<a class="homelink" href="http://bigdata07.ihep.ac.cn/cdfs/">
+<h1 style="text-align:center"> Transfer Data Block between Local and  Remote Station</h1><br>
+</a>
+<div class="form">
+        <form class="get_input" action="get.php" method="POST">
+                <h3>Get File from Data Source DIR of the Remote Station</h3>
+                From: <input type="text" name="gfrom_path"> To:<input type="text" name="gto_path"> <input type="submit" value="submit">
+        </form>
+	<br>
+        <form class="put_input" action="put.php" method="POST">
+                <h3>Put File to Data Source DIR of the Remote Station</h3>
+                From: <input type="text" name="pfrom_path"> To: <input type="text" name="pto_path"><input type="submit" value="submit">
+        </form>
+</div>
+</body>
+</html>
+

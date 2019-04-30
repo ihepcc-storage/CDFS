@@ -1,0 +1,213 @@
+<!DOCTYPE  html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>Cross-Domain File System</title>
+<style>
+     	.max{
+         width: 700px;
+         height: auto;
+     	}
+     	.min{
+         width: 300px;
+         height: auto;
+      	}
+	.cd-user-modal {
+	position: fixed;
+ 	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+  	background: rgba(52, 54, 66, 0.9);
+  	z-index: 3;
+  	overflow-y: auto;
+  	cursor: pointer;
+  	visibility: hidden;
+  	opacity: 0;
+  	-webkit-transition: opacity 0.3s 0, visibility 0 0.3s;
+  	-moz-transition: opacity 0.3s 0, visibility 0 0.3s;
+  	transition: opacity 0.3s 0, visibility 0 0.3s;
+	}
+	.cd-user-modal.is-visible {
+  	visibility: visible;
+  	opacity: 1;
+  	-webkit-transition: opacity 0.3s 0, visibility 0 0;
+  	-moz-transition: opacity 0.3s 0, visibility 0 0;
+  	transition: opacity 0.3s 0, visibility 0 0;
+	}
+	.cd-user-modal.is-visible .cd-user-modal-container {
+  	-webkit-transform: translateY(0);
+  	-moz-transform: translateY(0);
+  	-ms-transform: translateY(0);
+  	-o-transform: translateY(0);
+  	transform: translateY(0);
+	}	
+	.cd-user-modal-container {
+  	position: relative;
+  	width: 90%;
+  	max-width: 600px;
+  	background: #FFF;
+  	margin: 3em auto 4em;
+  	cursor: auto;
+  	border-radius: 0.25em;
+  	-webkit-transform: translateY(-30px);
+  	-moz-transform: translateY(-30px);
+  	-ms-transform: translateY(-30px);
+	-o-transform: translateY(-30px);
+  	transform: translateY(-30px);
+  	-webkit-transition-property: -webkit-transform;
+  	-moz-transition-property: -moz-transform;
+  	transition-property: transform;
+  	-webkit-transition-duration: 0.3s;
+  	-moz-transition-duration: 0.3s;
+  	transition-duration: 0.3s;
+	}
+	.cd-user-modal-container {
+  	content: "";
+  	display: table;
+  	clear: both;
+	}
+	.cd-user-modal-container div {
+        width: 50%;
+        text-align: center;
+        }
+	.cd-user-modal-container input{
+		text-align:center;
+	}
+	.cd-user-modal-container h2{
+		width:100%
+		height:auto;
+		text-align:center;
+	}
+	.cd-user-modal-container  li:first-child a {
+  	border-radius: .25em 0 0 0;
+	}
+	.cd-user-modal-container  li:last-child a {
+  	border-radius: 0 .25em 0 0;
+	}
+	.cd-user-modal-container  a {
+  	display: block;
+  	width: 100%;
+  	height: 50px;
+  	line-height: 50px;
+  	background: #d2d8d8;
+  	color: #809191;
+	}
+	.cd-user-modal-container  a.selected {
+  	background: #FFF;
+  	color: #505260;
+	}
+	.cd-signup{
+	width:200px; 
+	height: auto;
+	position: fixed;
+	right:8px; 
+	top:10px;
+	color: #001
+	}
+	.func{
+		text-align: center;
+		position: fixed;
+		bottom: 10px;
+	}
+	.func li{
+		display: inline-block;
+		white-space: nowrap;
+	}
+	.func li a{
+		color:#001;
+		font-weight: bold;
+		margin-left: 100px;
+	}
+	.intro{
+		text-align:center;
+	}
+</style>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+    $(function(){
+       $("#btn").click(function(){
+           $("#img1").toggle();
+       });
+    });
+    $(function(){
+       $("#img1").click(function(){
+           $(this).toggleClass('min')
+           $(this).toggleClass('max');
+       });
+    });
+
+    jQuery(document).ready(function($){
+        var $form_modal = $('.cd-user-modal'),
+	$form_signup = $form_modal.find('#cd-signup'),
+	$main_nav = $('.main_nav');
+
+	//弹出窗口
+	$main_nav.on('click', function(event){
+		if( $(event.target).is($main_nav) ) {
+			// on mobile open the submenu
+			$(this).children('ul').toggleClass('is-visible');
+		} else {
+			// on mobile close submenu
+			$main_nav.children('ul').removeClass('is-visible');
+			//show modal layer
+			$form_modal.addClass('is-visible');	
+			//show the selected form
+			( $(event.target).is('.cd-signup') ) ? signup_selected() : login_selected();
+		}
+
+	});
+	//关闭弹出窗口
+	$('.cd-user-modal').on('click', function(event){
+		if( $(event.target).is($form_modal) || $(event.target).is('.cd-close-form') ) {
+			$form_modal.removeClass('is-visible');
+		}	
+	});
+	//使用Esc键关闭弹出窗口
+	$(document).keyup(function(event){
+    	if(event.which=='27'){
+    		$form_modal.removeClass('is-visible');
+	    }
+	});
+    });
+</script>
+</head>
+
+<body>
+<h1 style="text-align:center"><strong> Cross-Domain File System</strong></h1>
+<center><img src="ihep.jpg" width="400" height="300" alt="background"></center>
+<div class="intro">
+	<input type="button" value="System Structure" width="300" height="200"  id="btn"/></br></br></br>
+	<p><strong>Introduction For Cross-Domain File System</strong></br></br>The file system is used to proide remote data accessing in a High-performance way over a WAN</br></p>
+	<img src="baby.png" id="img1" class='min' style='display:none'/>
+</div>
+<div class="func">
+<li><a href="list.html">List Files of the Specified DIR on the Remote Station </a></li>
+<li><a href="transfer.html">Transfer Data Block between Loacal and Remote Station</a></li>
+</div>
+<div class="main_nav">
+	<ul>
+		<a class="cd-signup" href="#0">Set the Configure</a>
+	</ul>
+</div>
+<div class="cd-user-modal"> 
+	<div class="cd-user-modal-container">
+		<form class="cd-form" action="submit_configure.php" method="POST">
+			<h2>Fill the configure info</h2>
+			<div>
+			Remote Server IP:
+			<input type="text" name="ip"><br><br>
+			Communicate Port:
+			<input type="text" name="consol"><br><br>
+			Data Source DIR : 
+			<input type="text" name="ddir"><br><br>
+			Cache File DIR  : 
+			<input type="text" name="bdir"><br><br>
+			<input type="submit" id="submit" value="Submit">
+			</div>
+		</form>
+	</div>
+</div> 
+</body>
+</html>
