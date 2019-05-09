@@ -1,5 +1,4 @@
 # CDFS
-README
 ===========================
 该文件用于描述本系统的基本架构、功能特性、部署安装等。
 
@@ -33,5 +32,12 @@ README
     * 使用举例
 * [联系我们](#联系我们)
 ****
+
+
 联系我们
-if this project helps you a lot, and you would like to support this project's further development and the continuous maintenance of this project, you can contect xuq@ihep.ac.cn. Your donation is highly appreciated. Thank you!
+
+if this project helps you a lot, and you would 
+like to support this project's further development 
+and the continuous maintenance of this project, 
+you can contect xuq@ihep.ac.cn. 
+Your donation is highly appreciated. Thank you!
