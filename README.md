@@ -91,113 +91,114 @@ systemctl start xrootd@standalone.service
 ```
 ### 缓存服务器端
 1. 安装mysql  
-   1. 创建mysql-cmmunity.repo
-```Bash
-vi /etc/yum.repos.d/mysql-cmmunity.repo
-```
-内容如下：
-```Bash
-[mysql57-community]
-name=MySQL 5.7 Community Server
-baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
-enabled=1
-gpgcheck=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysq
-```
-   2. 下载mysql
-```Bash
-yum install mysql-community-server.x86_64  mysql-community-devel.x86_64
-```
-   3. 初始化mysql
-```Bash
-mysql initialization
-```
-   4. 获取初次安装后的密码
-```Bash
-grep "temporary password" /var/log/mysqld.log
-```
-   5. 设置新密码
-```Bash
-set global validate_password_policy=0;
-set password for root@localhost = password('123456ok');
-```
-   6. 重新生成mysql.sock文件，提供正常服务
-```Bash
-/opt/lampp/lampp restart
-```
-   7. 如果没有lampp
-使用root用户，在https://www.apachefriends.org/zh_cn/index.html 上找到合适的版本下载地址，使用wget -c进行下载，得到.run格式的文件，这里以xampp-linux-1.8.3-5-installer.run为例，安装并运行。
-```Bash
-chmod +x xampp-linux-1.8.3-5-installer.run
-./xampp-linux-1.8.3-5-installer.run
-/opt/lampp/lampp start
-```
+   1. 创建mysql-cmmunity.repo  
+	```Bash
+	vi /etc/yum.repos.d/mysql-cmmunity.repo
+	```
+	内容如下：
+	```Bash
+	[mysql57-community]
+	name=MySQL 5.7 Community Server
+	baseurl=http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+	enabled=1
+	gpgcheck=0
+	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysq
+	```
+   2. 下载mysql  
+	```Bash
+	yum install mysql-community-server.x86_64  mysql-community-devel.x86_64
+	```
+   3. 初始化mysql  
+	```Bash
+	mysql initialization
+	```
+   4. 获取初次安装后的密码  
+	```Bash
+	grep "temporary password" /var/log/mysqld.log
+	```
+   5. 设置新密码  
+	```Bash
+	set global validate_password_policy=0;
+	set password for root@localhost = password('123456ok');
+	```
+   6. 重新生成mysql.sock文件，提供正常服务  
+	```Bash
+	/opt/lampp/lampp restart
+	```
+   7. 如果没有lampp  
+	使用root用户，在https://www.apachefriends.org/zh_cn/index.html 上找到合适的版本下载地址。  
+	使用wget -c进行下载，得到.run格式的文件，这里以xampp-linux-1.8.3-5-installer.run为例，安装并运行。
+	```Bash
+	chmod +x xampp-linux-1.8.3-5-installer.run
+	./xampp-linux-1.8.3-5-installer.run
+	/opt/lampp/lampp start
+	```
 2. 安装MyRocksDB  
-   1. 安装依赖
-```Bash
-yum install cmake gcc-c++ bzip2-devel libaio-devel bison \
-zlib-devel snappy-devel boost-devel
-yum install gflags-devel readline-devel ncurses-devel \
-openssl-devel lz4-devel gdb git
-yum install libzstd-devel
-yum install nss curl libcurl
-```
-   2. 安装MyRocksDB
-```Bash
-git clone https://github.com/facebook/mysql-5.6.git
-git submodule init
-git submodule update
-cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_SSL=system \
--DWITH_ZLIB=bundled -DMYSQL_MAINTAINER_MODE=0 -DENABLED_LOCAL_INFILE=1 \
--DENABLE_DTRACE=0 -DCMAKE_CXX_FLAGS="-march=native" \
--DWITH_ZSTD=/usr
-make -j8    
-make install
-```
-   3. 修改my.cnf
-内容如下：
-```Bash
-[mysqld]
-datadir=/var/lib/mysql/
-socket=/tmp/mysql.sock  #最好定义为/tmp之后连接客户端时不需要再次声明-S，cpp访问时不是tmp下也需要代码内指定
-symbolic-links=0
+   1. 安装依赖  
+	```Bash
+	yum install cmake gcc-c++ bzip2-devel libaio-devel bison \
+	zlib-devel snappy-devel boost-devel
+	yum install gflags-devel readline-devel ncurses-devel \
+	openssl-devel lz4-devel gdb git
+	yum install libzstd-devel
+	yum install nss curl libcurl
+	```
+   2. 安装MyRocksDB  
+	```Bash
+	git clone https://github.com/facebook/mysql-5.6.git
+	git submodule init
+	git submodule update
+	cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_SSL=system \
+	-DWITH_ZLIB=bundled -DMYSQL_MAINTAINER_MODE=0 -DENABLED_LOCAL_INFILE=1 \
+	-DENABLE_DTRACE=0 -DCMAKE_CXX_FLAGS="-march=native" \
+	-DWITH_ZSTD=/usr
+	make -j8    
+	make install
+	```
+   3. 修改my.cnf  
+	内容如下：
+	```Bash
+	[mysqld]
+	datadir=/var/lib/mysql/
+	socket=/tmp/mysql.sock  #最好定义为/tmp之后连接客户端时不需要再次声明-S，cpp访问时不是tmp下也需要代码内指定
+	symbolic-links=0
 
-rocksdb
-default-storage-engine=rocksdb
-skip-innodb
-default-tmp-storage-engine=MyISAM
-collation-server=latin1_bin #(or utf8_bin, binary)
-log-bin
-binlog-format=ROW
+	rocksdb
+	default-storage-engine=rocksdb
+	skip-innodb
+	default-tmp-storage-engine=MyISAM
+	collation-server=latin1_bin #(or utf8_bin, binary)
+	log-bin
+	binlog-format=ROW
 
-sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+	sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 
-[mysqld_safe]
-log-error=/var/log/mysql/mysql.log
-pid-file=/var/run/mysql/mysql.pid
-```
-   4. 有关mysql的其他设置
-```Bash
-useradd mysql
-chown -R mysql:mysql /var/lib/mysql //数据文件
-chown -R mysql:mysql /usr/local/mysql //安装文件
-chown -R mysql:mysql /var/log/mysql //日志文件
-chown -R mysql:mysql /var/run/mysql //进程文件
-cd /usr/local/mysql
-/usr/local/mysql/scripts/mysql_install_db --defaults-file=/usr/local/mysql/my.cnf
-/usr/local/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf &
-/usr/local/mysql/bin/mysqladmin -u root password '123456' 
-/usr/local/mysql/bin/mysql -p
-在/etc/ld.so.conf中添加
-/usr/local/mysql/lib
-/sbin/ldconfig
-```
-   5. 其他依赖库
-```Bash
-yum install curl-devel  json-c-devel  libuuid-devel  zlib-devel
-```
+	[mysqld_safe]
+	log-error=/var/log/mysql/mysql.log
+	pid-file=/var/run/mysql/mysql.pid
+	```
+   4. 有关mysql的其他设置  
+	```Bash
+	useradd mysql
+	chown -R mysql:mysql /var/lib/mysql //数据文件
+	chown -R mysql:mysql /usr/local/mysql //安装文件
+	chown -R mysql:mysql /var/log/mysql //日志文件
+	chown -R mysql:mysql /var/run/mysql //进程文件
+	cd /usr/local/mysql
+	/usr/local/mysql/scripts/mysql_install_db --defaults-file=/usr/local/mysql/my.cnf
+	/usr/local/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf &
+	/usr/local/mysql/bin/mysqladmin -u root password '123456' 
+	/usr/local/mysql/bin/mysql -p
+	在/etc/ld.so.conf中添加
+	/usr/local/mysql/lib
+	/sbin/ldconfig
+	```
+   5. 其他依赖库  
+	```Bash
+	yum install curl-devel  json-c-devel  libuuid-devel  zlib-devel
+	```
 
-3. 安装python tornado传输模块
+3. 安装python tornado传输模块  
 ```Bash
 yum install openssl-devel
 /安装Python3.5/
@@ -217,17 +218,17 @@ vi /etc/xrootd/xrootd-standalone.cfg #修改all.export 服务端暴露目录为/
 chmod xrootd:xrootd  /cdfs_data #文件夹属性修改，不然客户端只有读、创建权限没有写权限
 systemctl start xrootd@standalone.service #启动xrootd服务
 ```
-4. 缓存服务配置
-/etc/NSCONFIG填写数据库用户和密码
+4. 缓存服务配置  
+/etc/NSCONFIG填写数据库用户和密码  
 ```Bash
 ./initdb.sh #创建数据库 Cns_mysql_tbl.sql创建数据表(只需要file-transfer seg-transfer uniqueid-transfer 三个表)
 cp nsdaemon.scripts /etc/init.d/nsdaemon #添加服务启动脚本         
 ln -s /usr/bin/nsdaemon /usr/local/bin/nsdaemon    
 ln -s /usr/bin/nsshutdown /usr/local/bin/nsshutdown
 ```
-填写配置文件   /etc/cdfs/cdfs.cf  
+填写配置文件   /etc/cdfs/cdfs.cf   
 【配置文件详解】  
-5. 编译安装
+5. 编译安装  
 ```Bash
 make
 make install
@@ -242,20 +243,20 @@ export CNS_HOST="vm083170.v.ihep.ac.cn"
  #vi /etc/sysconfig/network 并使用hostname命令
  #同时添加/etc/hosts 主机名用于域名解析
 ```
-2. scp缓存服务器的client/ 到客户端本地
+2. scp缓存服务器的client/ 到客户端本地  
 
 ### 可能出现的问题及解决方法
-1. Cns_mysql_tbl.sql数据库操作脚本，插入爆出异常
+1. Cns_mysql_tbl.sql数据库操作脚本，插入爆出异常  
 ```Bash
 [Err] 1055 - Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'information_schema.PROFILING.SEQ' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
 ```
-这是由于only_full_group_by造成的，删除该默认属性即可
+这是由于only_full_group_by造成的，删除该默认属性即可  
 ```Bash
 select @@global.sql_mode
 set @@global.sql_mode ='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
 ```
 
-2. 无法使用IP 进行mysql_real_connect，原因是数据库的访问权限默认在localhost
+2. 无法使用IP 进行mysql_real_connect，原因是数据库的访问权限默认在localhost  
 ```Bash
 grant all privileges on cns_db.* to'leaf'@'%' identified by 'leaf_cache_pq2';
 flush privileges;
